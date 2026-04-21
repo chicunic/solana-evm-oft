@@ -1,0 +1,47 @@
+{
+  "name": "solana-evm-oft",
+  "version": "0.0.1",
+  "description": "LayerZero OFT cross-chain token bridge monorepo (EVM + Solana)",
+  "private": true,
+  "license": "MIT",
+  "author": "chicunic",
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319",
+  "scripts": {
+    "clean": "pnpm -r run clean",
+    "compile": "pnpm -r run compile",
+    "test": "pnpm -r run test",
+    "check": "pnpm -r run typecheck && prettier --check .",
+    "fix": "prettier --write .",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@coral-xyz/anchor": "^0.32.1",
+    "@metaplex-foundation/mpl-toolbox": "^0.10.0",
+    "@swc/core": "^1.15.30",
+    "dotenv": "^17.4.2",
+    "husky": "^9.1.7",
+    "mocha": "^11.7.5",
+    "prettier": "^3.8.3",
+    "solhint": "^6.2.1"
+  },
+  "resolutions": {
+    "@solana/web3.js": "^1.98.0",
+    "ethers": "^5.7.2",
+    "hardhat-deploy": "^0.12.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "@solana/web3.js": "^1.98.0",
+      "ethers": "^5.7.2",
+      "hardhat-deploy": "^0.12.1"
+    }
+  },
+  "overrides": {
+    "@solana/web3.js": "^1.98.0",
+    "ethers": "^5.7.2",
+    "hardhat-deploy": "^0.12.1"
+  }
+}

@@ -1,0 +1,17 @@
+*
+!*.js
+!*.json
+!*.md
+!*.sol
+!*.ts
+!*.yaml
+!*.yml
+!.vscode/
+!contracts/
+!deploy/
+!src/
+!tasks/
+!test/
+pnpm-lock.yaml
+pnpm-workspace.yaml
+Cargo.lock
