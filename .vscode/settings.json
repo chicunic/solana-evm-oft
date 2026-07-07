@@ -1,0 +1,29 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "prettier.requireConfig": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[solidity]": {
+    "editor.defaultFormatter": "juanblanco.solidity",
+    "editor.tabSize": 4
+  },
+  "solidity.formatter": "forge",
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer",
+    "editor.tabSize": 4
+  },
+  "search.exclude": {
+    "**/artifacts": true,
+    "**/cache": true,
+    "**/out": true,
+    "**/target": true,
+    "**/.anchor": true,
+    "pnpm-lock.yaml": true
+  }
+}

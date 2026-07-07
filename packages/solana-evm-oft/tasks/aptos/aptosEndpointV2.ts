@@ -1,325 +1,374 @@
-import { OmniAddress, OmniPoint, OmniTransaction } from '@layerzerolabs/devtools'
-import { EndpointId } from '@layerzerolabs/lz-definitions'
+import { OmniAddress, OmniPoint, OmniTransaction } from "@layerzerolabs/devtools";
+import { EndpointId } from "@layerzerolabs/lz-definitions";
 import {
-    IEndpointV2,
-    MessageParams,
-    MessagingFee,
-    SetConfigParam,
-    Timeout,
-    Uln302ConfigType,
-    Uln302ExecutorConfig,
-    Uln302SetExecutorConfig,
-    Uln302SetUlnConfig,
-    Uln302UlnConfig,
-    UlnReadSetUlnConfig,
-    UlnReadUlnConfig,
-    UlnReadUlnUserConfig,
-} from '@layerzerolabs/protocol-devtools'
+  IEndpointV2,
+  IUln302,
+  IUlnRead,
+  MessageParams,
+  MessagingFee,
+  SetConfigParam,
+  Timeout,
+  Uln302ConfigType,
+  Uln302ExecutorConfig,
+  Uln302SetExecutorConfig,
+  Uln302SetUlnConfig,
+  Uln302UlnConfig,
+  Uln302UlnUserConfig,
+  UlnReadSetUlnConfig,
+  UlnReadUlnConfig,
+  UlnReadUlnUserConfig,
+} from "@layerzerolabs/protocol-devtools";
 
 /**
  * Minimal "AptosEndpointV2" skeleton that implements IEndpointV2 for Aptos.
  * All methods here return placeholder or dummy values for now.
  */
 export class AptosEndpointV2 implements IEndpointV2 {
-    // The devtools often expect the "point" property from IOmniSDK
-    public point: OmniPoint
+  // The devtools often expect the "point" property from IOmniSDK
+  public point: OmniPoint;
 
-    constructor(point: OmniPoint) {
-        this.point = point
-    }
+  constructor(point: OmniPoint) {
+    this.point = point;
+  }
 
-    //
-    // ----------------------------------------------------------
-    //  Required by IOmniSDK (the base) or the IEndpointV2 extension
-    // ----------------------------------------------------------
+  //
+  // ----------------------------------------------------------
+  //  Required by IOmniSDK (the base) or the IEndpointV2 extension
+  // ----------------------------------------------------------
 
-    // The devtools might call this to fetch a "Uln302" object.
-    // For now, return a dummy object that implements IUln302
-    async getUln302SDK(_address: OmniAddress) {
-        return {
-            point: this.point,
-            // placeholders to avoid compile errors:
-            async getUlnConfig(_eid: EndpointId, _address: OmniAddress, _type: Uln302ConfigType) {
-                return {} as Uln302UlnConfig
-            },
-            async getAppUlnConfig(_eid: EndpointId, _address: OmniAddress, _type: Uln302ConfigType) {
-                return {} as Uln302UlnConfig
-            },
-            async hasAppUlnConfig(
-                _eid: EndpointId,
-                _oapp: OmniAddress,
-                _config: Uln302UlnConfig,
-                _type: Uln302ConfigType
-            ) {
-                return false
-            },
-            async setDefaultUlnConfig(_eid: EndpointId, _config: Uln302UlnConfig) {
-                return {
-                    point: this.point,
-                    data: '0x00',
-                } as OmniTransaction
-            },
-            async getExecutorConfig(_eid: EndpointId, _address: OmniAddress) {
-                return {
-                    maxMessageSize: 1024,
-                    executor: '0x0',
-                } as Uln302ExecutorConfig
-            },
-            async getAppExecutorConfig(_eid: EndpointId, _address: OmniAddress): Promise<Uln302ExecutorConfig> {
-                return {
-                    maxMessageSize: 1024,
-                    executor: '0x0',
-                } as Uln302ExecutorConfig
-            },
-            async hasAppExecutorConfig(_eid: EndpointId, _oapp: OmniAddress, _config: Uln302ExecutorConfig) {
-                return false
-            },
-            async setDefaultExecutorConfig(_eid: EndpointId, _config: Uln302ExecutorConfig) {
-                return {
-                    point: this.point,
-                    data: '0x00',
-                } as OmniTransaction
-            },
-        }
-    }
+  isBlockedLibrary(_uln: OmniAddress): Promise<boolean> {
+    return Promise.resolve(false);
+  }
 
-    // The devtools might call this to fetch a "UlnRead" object.
-    // For now, return a dummy object that implements IUlnRead
-    async getUlnReadSDK(_address: OmniAddress) {
-        return {
-            point: this.point,
-            async getUlnConfig(_channelId: number, _address: OmniAddress) {
-                return {
-                    executor: '0x0',
-                    requiredDVNs: [],
-                    optionalDVNs: [],
-                    optionalDVNThreshold: 0,
-                } as UlnReadUlnConfig
-            },
-            async getAppUlnConfig(_channelId: number, _address: OmniAddress) {
-                return {
-                    executor: '0x0',
-                    requiredDVNs: [],
-                    optionalDVNs: [],
-                    optionalDVNThreshold: 0,
-                } as UlnReadUlnConfig
-            },
-            async hasAppUlnConfig(_channelId: number, _oapp: OmniAddress, _config: UlnReadUlnConfig) {
-                return false
-            },
-            async setDefaultUlnConfig(_channelId: number, _config: UlnReadUlnConfig) {
-                return {
-                    point: this.point,
-                    data: '0x00',
-                } as OmniTransaction
-            },
-        }
-    }
-
-    //
-    // ----------------------------------------------------------
-    //  Required by IEndpointV2 specifically
-    // ----------------------------------------------------------
-
-    async getDelegate(_oapp: OmniAddress): Promise<OmniAddress | undefined> {
-        return undefined
-    }
-
-    async isDelegate(_oapp: OmniAddress, _delegate: OmniAddress): Promise<boolean> {
-        return false
-    }
-
-    async getDefaultReceiveLibrary(_eid: EndpointId): Promise<OmniAddress | undefined> {
-        return undefined
-    }
-
-    async setDefaultReceiveLibrary(_eid: EndpointId, _uln: OmniAddress, _gracePeriod?: bigint) {
-        return {
-            point: this.point,
-            data: '0x00',
-        } as OmniTransaction
-    }
-
-    async getDefaultSendLibrary(_eid: EndpointId): Promise<OmniAddress | undefined> {
-        return undefined
-    }
-
-    async setDefaultSendLibrary(_eid: EndpointId, _uln: OmniAddress) {
-        return {
-            point: this.point,
-            data: '0x00',
-        } as OmniTransaction
-    }
-
-    async isRegisteredLibrary(_uln: OmniAddress): Promise<boolean> {
-        return false
-    }
-
-    async registerLibrary(_uln: OmniAddress) {
-        return {
-            point: this.point,
-            data: '0x00',
-        } as OmniTransaction
-    }
-
-    async getSendLibrary(_sender: OmniAddress, _dstEid: EndpointId): Promise<OmniAddress | undefined> {
-        return '0x0'
-    }
-
-    async getReceiveLibrary(_receiver: OmniAddress, _srcEid: EndpointId): Promise<[OmniAddress | undefined, boolean]> {
-        return ['0x0', false]
-    }
-
-    async getDefaultReceiveLibraryTimeout(_eid: EndpointId): Promise<Timeout> {
-        return { lib: '0x0', expiry: BigInt(0) }
-    }
-
-    async getReceiveLibraryTimeout(_receiver: OmniAddress, _srcEid: EndpointId): Promise<Timeout> {
-        return { lib: '0x0', expiry: BigInt(0) }
-    }
-
-    async setSendLibrary(_oapp: OmniAddress, _eid: EndpointId, _uln: OmniAddress) {
-        return {
-            point: this.point,
-            data: '0x00',
-        } as OmniTransaction
-    }
-
-    async isDefaultSendLibrary(_sender: OmniAddress, _dstEid: EndpointId): Promise<boolean> {
-        return false
-    }
-
-    async setReceiveLibrary(_oapp: OmniAddress, _eid: EndpointId, _uln: OmniAddress, _gracePeriod: bigint) {
-        return {
-            point: this.point,
-            data: '0x00',
-        } as OmniTransaction
-    }
-
-    async setReceiveLibraryTimeout(_oapp: OmniAddress, _eid: EndpointId, _uln: OmniAddress, _expiry: bigint) {
-        return {
-            point: this.point,
-            data: '0x00',
-        } as OmniTransaction
-    }
-
-    async getExecutorConfig(_oapp: OmniAddress, _uln: OmniAddress, _eid: EndpointId) {
-        return {
-            maxMessageSize: 1024,
-            executor: '0x0',
-        } as Uln302ExecutorConfig
-    }
-
-    async getAppExecutorConfig(_oapp: OmniAddress, _uln: OmniAddress, _eid: EndpointId) {
-        return {
-            maxMessageSize: 1024,
-            executor: '0x0',
-        } as Uln302ExecutorConfig
-    }
-
-    async hasAppExecutorConfig(_oapp: OmniAddress, _uln: OmniAddress, _eid: EndpointId, _config: Uln302ExecutorConfig) {
-        return false
-    }
-
-    async setExecutorConfig(_oapp: OmniAddress, _uln: OmniAddress, _setExecutorConfig: Uln302SetExecutorConfig[]) {
-        // Possibly return multiple OmniTransactions if the devtools call expects them
-        return [
-            {
-                point: this.point,
-                data: '0x00',
-            },
-        ] as OmniTransaction[]
-    }
-
-    async getUlnConfig(_oapp: OmniAddress, _uln: OmniAddress, _eid: EndpointId, _type: Uln302ConfigType) {
-        return {
-            confirmations: BigInt(0),
-            requiredDVNs: [],
-            optionalDVNs: [],
-            optionalDVNThreshold: 0,
-        } as Uln302UlnConfig
-    }
-
-    async getAppUlnConfig(_oapp: OmniAddress, _uln: OmniAddress, _eid: EndpointId, _type: Uln302ConfigType) {
-        return {
-            confirmations: BigInt(0),
-            requiredDVNs: [],
-            optionalDVNs: [],
-            optionalDVNThreshold: 0,
-        } as Uln302UlnConfig
-    }
-
-    async getAppUlnReadConfig(_oapp: OmniAddress, _uln: OmniAddress, _channelId: number) {
-        return {
-            executor: '0x0',
-            requiredDVNs: [],
-            optionalDVNs: [],
-            optionalDVNThreshold: 0,
-        } as UlnReadUlnConfig
-    }
-
-    async hasAppUlnConfig(
-        _oapp: OmniAddress,
-        _uln: OmniAddress,
+  // The devtools might call this to fetch a "Uln302" object.
+  // For now, return a dummy object that implements IUln302
+  getUln302SDK(_address: OmniAddress): Promise<IUln302> {
+    return Promise.resolve({
+      point: this.point,
+      // placeholders to avoid compile errors:
+      getUlnConfig(
         _eid: EndpointId,
-        _config: any,
-        _type: Uln302ConfigType
-    ) {
-        return false
-    }
-
-    async hasAppUlnReadConfig(
+        _address: OmniAddress | null | undefined,
+        _type: Uln302ConfigType,
+      ): Promise<Uln302UlnConfig> {
+        return Promise.resolve({} as Uln302UlnConfig);
+      },
+      getAppUlnConfig(_eid: EndpointId, _address: OmniAddress, _type: Uln302ConfigType): Promise<Uln302UlnConfig> {
+        return Promise.resolve({} as Uln302UlnConfig);
+      },
+      hasAppUlnConfig(
+        _eid: EndpointId,
         _oapp: OmniAddress,
-        _uln: OmniAddress,
-        _channelId: number,
-        _config: UlnReadUlnUserConfig
-    ) {
-        return false
-    }
+        _config: Uln302UlnUserConfig,
+        _type: Uln302ConfigType,
+      ): Promise<boolean> {
+        return Promise.resolve(false);
+      },
+      setDefaultUlnConfig(_eid: EndpointId, _config: Uln302UlnUserConfig): Promise<OmniTransaction> {
+        return Promise.resolve<OmniTransaction>({
+          point: this.point,
+          data: "0x00",
+        });
+      },
+      getExecutorConfig(_eid: EndpointId, _address?: OmniAddress | null): Promise<Uln302ExecutorConfig> {
+        return Promise.resolve({
+          maxMessageSize: 1024,
+          executor: "0x0",
+        });
+      },
+      getAppExecutorConfig(_eid: EndpointId, _address: OmniAddress): Promise<Uln302ExecutorConfig> {
+        return Promise.resolve({
+          maxMessageSize: 1024,
+          executor: "0x0",
+        });
+      },
+      hasAppExecutorConfig(_eid: EndpointId, _oapp: OmniAddress, _config: Uln302ExecutorConfig): Promise<boolean> {
+        return Promise.resolve(false);
+      },
+      setDefaultExecutorConfig(_eid: EndpointId, _config: Uln302ExecutorConfig): Promise<OmniTransaction> {
+        return Promise.resolve<OmniTransaction>({
+          point: this.point,
+          data: "0x00",
+        });
+      },
+    });
+  }
 
-    async setUlnConfig(_oapp: OmniAddress, _uln: OmniAddress, _setUlnConfig: Uln302SetUlnConfig[]) {
-        return [
-            {
-                point: this.point,
-                data: '0x00',
-            },
-        ] as OmniTransaction[]
-    }
+  // The devtools might call this to fetch a "UlnRead" object.
+  // For now, return a dummy object that implements IUlnRead
+  getUlnReadSDK(_address: OmniAddress): Promise<IUlnRead> {
+    return Promise.resolve({
+      point: this.point,
+      getUlnConfig(_channelId: number, _address: OmniAddress | null | undefined): Promise<UlnReadUlnConfig> {
+        // The stub omits the DVN count fields on purpose, hence the cast through unknown
+        return Promise.resolve({
+          executor: "0x0",
+          requiredDVNs: [],
+          optionalDVNs: [],
+          optionalDVNThreshold: 0,
+        } as unknown as UlnReadUlnConfig);
+      },
+      getAppUlnConfig(_channelId: number, _address: OmniAddress): Promise<UlnReadUlnConfig> {
+        // The stub omits the DVN count fields on purpose, hence the cast through unknown
+        return Promise.resolve({
+          executor: "0x0",
+          requiredDVNs: [],
+          optionalDVNs: [],
+          optionalDVNThreshold: 0,
+        } as unknown as UlnReadUlnConfig);
+      },
+      hasAppUlnConfig(_channelId: number, _oapp: OmniAddress, _config: UlnReadUlnUserConfig): Promise<boolean> {
+        return Promise.resolve(false);
+      },
+      setDefaultUlnConfig(_channelId: number, _config: UlnReadUlnUserConfig): Promise<OmniTransaction> {
+        return Promise.resolve<OmniTransaction>({
+          point: this.point,
+          data: "0x00",
+        });
+      },
+    });
+  }
 
-    async setUlnReadConfig(_oapp: OmniAddress, _uln: OmniAddress, _setUlnConfig: UlnReadSetUlnConfig[]) {
-        return [
-            {
-                point: this.point,
-                data: '0x00',
-            },
-        ] as OmniTransaction[]
-    }
+  //
+  // ----------------------------------------------------------
+  //  Required by IEndpointV2 specifically
+  // ----------------------------------------------------------
 
-    async getUlnConfigParams(_uln: OmniAddress, _setUlnConfig: Uln302SetUlnConfig[]) {
-        return [] as SetConfigParam[]
-    }
+  getDelegate(_oapp: OmniAddress): Promise<OmniAddress | undefined> {
+    return Promise.resolve(undefined);
+  }
 
-    async getUlnReadConfigParams(_uln: OmniAddress, _setUlnConfig: UlnReadSetUlnConfig[]) {
-        return [] as SetConfigParam[]
-    }
+  isDelegate(_oapp: OmniAddress, _delegate: OmniAddress): Promise<boolean> {
+    return Promise.resolve(false);
+  }
 
-    async getExecutorConfigParams(_uln: OmniAddress, _setExecutorConfig: Uln302SetExecutorConfig[]) {
-        return [] as SetConfigParam[]
-    }
+  getDefaultReceiveLibrary(_eid: EndpointId): Promise<OmniAddress | undefined> {
+    return Promise.resolve(undefined);
+  }
 
-    async setConfig(_oapp: OmniAddress, _uln: OmniAddress, _setConfigParam: SetConfigParam[]) {
-        return [
-            {
-                point: this.point,
-                data: '0x00',
-            },
-        ] as OmniTransaction[]
-    }
+  setDefaultReceiveLibrary(_eid: EndpointId, _uln: OmniAddress, _gracePeriod?: bigint): Promise<OmniTransaction> {
+    return Promise.resolve<OmniTransaction>({
+      point: this.point,
+      data: "0x00",
+    });
+  }
 
-    async quote(_params: MessageParams, _sender: OmniAddress): Promise<MessagingFee> {
-        return {
-            nativeFee: BigInt(0),
-            lzTokenFee: BigInt(0),
-        }
-    }
+  getDefaultSendLibrary(_eid: EndpointId): Promise<OmniAddress | undefined> {
+    return Promise.resolve(undefined);
+  }
+
+  setDefaultSendLibrary(_eid: EndpointId, _uln: OmniAddress): Promise<OmniTransaction> {
+    return Promise.resolve<OmniTransaction>({
+      point: this.point,
+      data: "0x00",
+    });
+  }
+
+  isRegisteredLibrary(_uln: OmniAddress): Promise<boolean> {
+    return Promise.resolve(false);
+  }
+
+  registerLibrary(_uln: OmniAddress): Promise<OmniTransaction> {
+    return Promise.resolve<OmniTransaction>({
+      point: this.point,
+      data: "0x00",
+    });
+  }
+
+  getSendLibrary(_sender: OmniAddress, _dstEid: EndpointId): Promise<OmniAddress | undefined> {
+    return Promise.resolve("0x0");
+  }
+
+  getReceiveLibrary(_receiver: OmniAddress, _srcEid: EndpointId): Promise<[OmniAddress | undefined, boolean]> {
+    return Promise.resolve<[OmniAddress | undefined, boolean]>(["0x0", false]);
+  }
+
+  getDefaultReceiveLibraryTimeout(_eid: EndpointId): Promise<Timeout> {
+    return Promise.resolve({ lib: "0x0", expiry: BigInt(0) });
+  }
+
+  getReceiveLibraryTimeout(_receiver: OmniAddress, _srcEid: EndpointId): Promise<Timeout> {
+    return Promise.resolve({ lib: "0x0", expiry: BigInt(0) });
+  }
+
+  setSendLibrary(_oapp: OmniAddress, _eid: EndpointId, _uln: OmniAddress): Promise<OmniTransaction> {
+    return Promise.resolve<OmniTransaction>({
+      point: this.point,
+      data: "0x00",
+    });
+  }
+
+  isDefaultSendLibrary(_sender: OmniAddress, _dstEid: EndpointId): Promise<boolean> {
+    return Promise.resolve(false);
+  }
+
+  setReceiveLibrary(
+    _oapp: OmniAddress,
+    _eid: EndpointId,
+    _uln: OmniAddress,
+    _gracePeriod: bigint,
+  ): Promise<OmniTransaction> {
+    return Promise.resolve<OmniTransaction>({
+      point: this.point,
+      data: "0x00",
+    });
+  }
+
+  setReceiveLibraryTimeout(
+    _oapp: OmniAddress,
+    _eid: EndpointId,
+    _uln: OmniAddress,
+    _expiry: bigint,
+  ): Promise<OmniTransaction> {
+    return Promise.resolve<OmniTransaction>({
+      point: this.point,
+      data: "0x00",
+    });
+  }
+
+  getExecutorConfig(_oapp: OmniAddress, _uln: OmniAddress, _eid: EndpointId): Promise<Uln302ExecutorConfig> {
+    return Promise.resolve({
+      maxMessageSize: 1024,
+      executor: "0x0",
+    });
+  }
+
+  getAppExecutorConfig(_oapp: OmniAddress, _uln: OmniAddress, _eid: EndpointId): Promise<Uln302ExecutorConfig> {
+    return Promise.resolve({
+      maxMessageSize: 1024,
+      executor: "0x0",
+    });
+  }
+
+  hasAppExecutorConfig(
+    _oapp: OmniAddress,
+    _uln: OmniAddress,
+    _eid: EndpointId,
+    _config: Uln302ExecutorConfig,
+  ): Promise<boolean> {
+    return Promise.resolve(false);
+  }
+
+  setExecutorConfig(
+    _oapp: OmniAddress,
+    _uln: OmniAddress,
+    _setExecutorConfig: Uln302SetExecutorConfig[],
+  ): Promise<OmniTransaction[]> {
+    // Possibly return multiple OmniTransactions if the devtools call expects them
+    return Promise.resolve<OmniTransaction[]>([
+      {
+        point: this.point,
+        data: "0x00",
+      },
+    ]);
+  }
+
+  getUlnConfig(
+    _oapp: OmniAddress,
+    _uln: OmniAddress,
+    _eid: EndpointId,
+    _type: Uln302ConfigType,
+  ): Promise<Uln302UlnConfig> {
+    // The stub omits the DVN count fields on purpose, hence the cast through unknown
+    return Promise.resolve({
+      confirmations: BigInt(0),
+      requiredDVNs: [],
+      optionalDVNs: [],
+      optionalDVNThreshold: 0,
+    } as unknown as Uln302UlnConfig);
+  }
+
+  getAppUlnConfig(
+    _oapp: OmniAddress,
+    _uln: OmniAddress,
+    _eid: EndpointId,
+    _type: Uln302ConfigType,
+  ): Promise<Uln302UlnConfig> {
+    // The stub omits the DVN count fields on purpose, hence the cast through unknown
+    return Promise.resolve({
+      confirmations: BigInt(0),
+      requiredDVNs: [],
+      optionalDVNs: [],
+      optionalDVNThreshold: 0,
+    } as unknown as Uln302UlnConfig);
+  }
+
+  getAppUlnReadConfig(_oapp: OmniAddress, _uln: OmniAddress, _channelId: number): Promise<UlnReadUlnConfig> {
+    // The stub omits the DVN count fields on purpose, hence the cast through unknown
+    return Promise.resolve({
+      executor: "0x0",
+      requiredDVNs: [],
+      optionalDVNs: [],
+      optionalDVNThreshold: 0,
+    } as unknown as UlnReadUlnConfig);
+  }
+
+  hasAppUlnConfig(
+    _oapp: OmniAddress,
+    _uln: OmniAddress,
+    _eid: EndpointId,
+    _config: Uln302UlnUserConfig,
+    _type: Uln302ConfigType,
+  ): Promise<boolean> {
+    return Promise.resolve(false);
+  }
+
+  hasAppUlnReadConfig(
+    _oapp: OmniAddress,
+    _uln: OmniAddress,
+    _channelId: number,
+    _config: UlnReadUlnUserConfig,
+  ): Promise<boolean> {
+    return Promise.resolve(false);
+  }
+
+  setUlnConfig(_oapp: OmniAddress, _uln: OmniAddress, _setUlnConfig: Uln302SetUlnConfig[]): Promise<OmniTransaction[]> {
+    return Promise.resolve<OmniTransaction[]>([
+      {
+        point: this.point,
+        data: "0x00",
+      },
+    ]);
+  }
+
+  setUlnReadConfig(
+    _oapp: OmniAddress,
+    _uln: OmniAddress,
+    _setUlnConfig: UlnReadSetUlnConfig[],
+  ): Promise<OmniTransaction[]> {
+    return Promise.resolve<OmniTransaction[]>([
+      {
+        point: this.point,
+        data: "0x00",
+      },
+    ]);
+  }
+
+  getUlnConfigParams(_uln: OmniAddress, _setUlnConfig: Uln302SetUlnConfig[]): Promise<SetConfigParam[]> {
+    return Promise.resolve([]);
+  }
+
+  getUlnReadConfigParams(_uln: OmniAddress, _setUlnConfig: UlnReadSetUlnConfig[]): Promise<SetConfigParam[]> {
+    return Promise.resolve([]);
+  }
+
+  getExecutorConfigParams(_uln: OmniAddress, _setExecutorConfig: Uln302SetExecutorConfig[]): Promise<SetConfigParam[]> {
+    return Promise.resolve([]);
+  }
+
+  setConfig(_oapp: OmniAddress, _uln: OmniAddress, _setConfigParam: SetConfigParam[]): Promise<OmniTransaction[]> {
+    return Promise.resolve<OmniTransaction[]>([
+      {
+        point: this.point,
+        data: "0x00",
+      },
+    ]);
+  }
+
+  quote(_params: MessageParams, _sender: OmniAddress): Promise<MessagingFee> {
+    return Promise.resolve({
+      nativeFee: BigInt(0),
+      lzTokenFee: BigInt(0),
+    });
+  }
 }

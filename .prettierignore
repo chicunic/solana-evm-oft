@@ -1,17 +1,17 @@
-*
-!*.js
-!*.json
-!*.md
-!*.sol
-!*.ts
-!*.yaml
-!*.yml
-!.vscode/
-!contracts/
-!deploy/
-!src/
-!tasks/
-!test/
+# Build outputs and generated artifacts
+node_modules/
+dist/
+out/
+artifacts/
+cache/
+coverage/
+target/
+.anchor/
+
+# Lockfiles and tool-managed files
 pnpm-lock.yaml
 pnpm-workspace.yaml
 Cargo.lock
+
+# Solidity is formatted by forge fmt / linted by solhint
+*.sol

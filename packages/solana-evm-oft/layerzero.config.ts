@@ -1,13 +1,13 @@
-import { EndpointId } from '@layerzerolabs/lz-definitions';
-import { ExecutorOptionType } from '@layerzerolabs/lz-v2-utilities';
-import { generateConnectionsConfig } from '@layerzerolabs/metadata-tools';
-import { OAppEnforcedOption, OmniPointHardhat } from '@layerzerolabs/toolbox-hardhat';
+import { EndpointId } from "@layerzerolabs/lz-definitions";
+import { ExecutorOptionType } from "@layerzerolabs/lz-v2-utilities";
+import { generateConnectionsConfig } from "@layerzerolabs/metadata-tools";
+import { OAppEnforcedOption, OmniPointHardhat } from "@layerzerolabs/toolbox-hardhat";
 
-import { getOftStoreAddress } from './tasks/solana';
+import { getOftStoreAddress } from "./tasks/solana";
 
 const arbitrumContract: OmniPointHardhat = {
   eid: EndpointId.ARBSEP_V2_TESTNET,
-  contractName: 'MyOFT',
+  contractName: "MyOFT",
 };
 
 const solanaContract: OmniPointHardhat = {
@@ -41,7 +41,7 @@ export default async function () {
     [
       arbitrumContract,
       solanaContract,
-      [['LayerZero Labs'], []],
+      [["LayerZero Labs"], []],
       [15, 32],
       [SOLANA_ENFORCED_OPTIONS, EVM_ENFORCED_OPTIONS],
     ],
